@@ -23,14 +23,12 @@ $ python BatchFLACtoMP3.py ./music_A ./music_B -f mp3 -b 192K
 ## Jupyter Notebook / iPython: using BatchFLACtoMP3.ipynb
 Just modify parameters in the file before execute:
 ```
-path_src    = './music_A'  # path of source
-path_dst    = './music_B'  # path of destination
+path_src    = './music_A'     # path of source
+path_dst    = './music_B'     # path of destination
 file_format = 'mp3'           # format
 bitrate     = '192K'          # bitrate
 ```
 ![conversion chart](BFtM_img01.png)
-
-## footnote
 
 [^1]: Only cover art so far, other album arts could be lost during conversion.
 [^2]: Though this script can output converted file with format supported by AudioSegment.export(), the tag writing function mutagen.mp3.MP3 supports only mp3 format files. If you recognize how this script works, you can try modifying `audio = MP3(dst_fullpath, ID3=ID3)` lines (and some corresponding class import) to meet your own requirement.
