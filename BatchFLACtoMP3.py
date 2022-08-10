@@ -1,5 +1,3 @@
-##### Module
-
 import numpy as np
 import os
 import time
@@ -15,9 +13,6 @@ from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, APIC
 
 
-##### Parameter: argparse
-##### Function
-
 def happy_time(start, stop):
     process_time = round(stop - start)
     ss = process_time % 60
@@ -26,7 +21,7 @@ def happy_time(start, stop):
     duration = "Process time == {}s == {}H {}m {}s".format(process_time,hh,mm,ss)
     return duration
 
-### Count all
+
 def count_files(path_src):
     count = 0
     for a, b, c in os.walk(path_src):
@@ -36,7 +31,7 @@ def count_files(path_src):
     print('Start conversion...')
     return count
 
-### Conversion
+
 def conversion(path_src, path_dst, count_1):
     conversion_count = 0
     count_2 = 0
@@ -103,7 +98,6 @@ def conversion(path_src, path_dst, count_1):
 
     return conversion_count, copy_count
 
-##### LOG
 
 def write_log(path_src, path_dst, time_start_tag_2, time_end_tag_2, count_1, conversion_count, copy_count, dt_end):
     log  = ''
