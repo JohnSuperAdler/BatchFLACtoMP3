@@ -148,24 +148,27 @@ print(f'Time end tag: {time_end_tag_2}')
 
 ##### LOG
 
-log  = ''
-log +=  '[PATH]\n'
-log += f'Source      : {path_src}\n'
-log += f'Destination : {path_dst}\n'
-log +=  '[TIME]\n'
-log += f'Start time : {time_start_tag_2}\n'
-log += f'End time   : {time_end_tag_2}\n'
-log +=  '[COUNT]\n'
-log += f'Total files          : {count_1}\n'
-log += f'Number of conversion : {conversion_count}\n'
-log += f'Number of copy       : {copy_count}\n'
+def write_log():
+    log  = ''
+    log +=  '[PATH]\n'
+    log += f'Source      : {path_src}\n'
+    log += f'Destination : {path_dst}\n'
+    log +=  '[TIME]\n'
+    log += f'Start time : {time_start_tag_2}\n'
+    log += f'End time   : {time_end_tag_2}\n'
+    log +=  '[COUNT]\n'
+    log += f'Total files          : {count_1}\n'
+    log += f'Number of conversion : {conversion_count}\n'
+    log += f'Number of copy       : {copy_count}\n'
 
-if not os.path.exists('output'):
-    os.mkdir('output')
+    if not os.path.exists('output'):
+        os.mkdir('output')
 
-log_fn = f'output/conversion_log_{dt_end.strftime("%y%m%d_%H%M%S")}.txt'
-if os.path.exists(log_fn): log_fn = log_fn.rsplit('.')[0] + '_X.txt'
-with open(log_fn, 'w') as file:
-    file.write(log)
+    log_fn = f'output/conversion_log_{dt_end.strftime("%y%m%d_%H%M%S")}.txt'
+    if os.path.exists(log_fn): log_fn = log_fn.rsplit('.')[0] + '_X.txt'
+    with open(log_fn, 'w') as file:
+        file.write(log)
 
-print('Log generated.')
+    print('Log generated.')
+
+write_log()
