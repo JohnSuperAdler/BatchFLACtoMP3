@@ -15,7 +15,7 @@ def happy_time(start, stop):
     ss = process_time % 60
     mm = process_time // 60 % 60
     hh = process_time // 3600
-    duration = "Process time == {}s == {}H {}m {}s".format(process_time,hh,mm,ss)
+    duration = f'Process time == {process_time}s == {hh}H {mm}m {ss}s'
     return duration
 
 
@@ -23,7 +23,7 @@ def count_files(path_src):
     count = 0
     for a, b, c in os.walk(path_src):
         for src_fn in c:
-            count +=1
+            count += 1
     print(f'Total {count} files in source directory.')
     print('Start conversion...')
     return count
@@ -36,7 +36,7 @@ def conversion(path_src, path_dst, count_1):
     for a, b, c in os.walk(path_src):
         for src_fn in c:
             count_2 += 1
-            ### Filename and path
+            # Filename and path
             src_fullpath = os.path.join(a, src_fn)
             dst_fn       = os.path.splitext(src_fn)[0] + '.mp3'
             dst_rela_dir = os.path.relpath(os.path.dirname(src_fullpath), path_src)
@@ -44,11 +44,11 @@ def conversion(path_src, path_dst, count_1):
             dst_fullpath = os.path.join(dst_full_dir, dst_fn)
             if not os.path.exists(dst_full_dir):
                 os.makedirs(dst_full_dir)
-            ### Check src file type
+            # Check src file type
             read_file = mutagen.File(src_fullpath)
             file_type = type(read_file)
-            
-            ### File type manifold
+
+            # File type manifold
             if file_type == mutagen.flac.FLAC:
                 # TAG
                 new_tag_di = {}
@@ -60,15 +60,15 @@ def conversion(path_src, path_dst, count_1):
                 # Art
                 try:
                     art = read_file.pictures[0].data
-                    audio = mp3.MP3(dst_fullpath, ID3=id3.ID3)    
-                    audio.tags.add(id3.APIC(encoding=0, # 3 is for utf-8
-                                            mime='image/png', # image/jpeg or image/png
-                                            type=3, # 3 is for the cover image
+                    audio = mp3.MP3(dst_fullpath, ID3=id3.ID3)
+                    audio.tags.add(id3.APIC(encoding=0,        # 3 is for utf-8
+                                            mime='image/png',  # image/jpeg or image/png
+                                            type=3,            # 3 is for the cover image
                                             data=art))
                     audio.save()
                 except:
                     pass
-                conversion_count +=1
+                conversion_count += 1
             elif file_type == mutagen.wave.WAVE:
                 # Convert
                 wav_audio = AudioSegment.from_file(src_fullpath, format='wav')
@@ -81,8 +81,7 @@ def conversion(path_src, path_dst, count_1):
                         audio.save()
                 except:
                     pass
-                conversion_count +=1
-            #elif (file_type == mutagen.mp3.MP3) or (file_type == mutagen.mp4.MP4) or (file_type == mutagen.asf.ASF):
+                conversion_count += 1
             elif file_type == mp3.MP3:
                 # Copy file
                 shutil.copy(src_fullpath, dst_fullpath)
@@ -97,7 +96,7 @@ def conversion(path_src, path_dst, count_1):
 
 
 def write_log(path_src, path_dst, time_start_tag_2, time_end_tag_2, count_1, conversion_count, copy_count, dt_end):
-    log  = ''
+    log = ''
     log +=  '[PATH]\n'
     log += f'Source      : {path_src}\n'
     log += f'Destination : {path_dst}\n'
@@ -113,7 +112,8 @@ def write_log(path_src, path_dst, time_start_tag_2, time_end_tag_2, count_1, con
         os.mkdir('output')
 
     log_fn = f'output/conversion_log_{dt_end.strftime("%y%m%d_%H%M%S")}.txt'
-    if os.path.exists(log_fn): log_fn = log_fn.rsplit('.')[0] + '_X.txt'
+    if os.path.exists(log_fn):
+        log_fn = log_fn.rsplit('.')[0] + '_X.txt'
     with open(log_fn, 'w') as file:
         file.write(log)
 
@@ -121,10 +121,10 @@ def write_log(path_src, path_dst, time_start_tag_2, time_end_tag_2, count_1, con
 
 
 def parse_args():
-    arg_parser = argparse.ArgumentParser() 
+    arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('src', type=str, help='path of source')
     arg_parser.add_argument('dst', type=str, help='path of destination')
-    arg_parser.add_argument('-f', '--format' , type=str, default='mp3' , help='format of output files')
+    arg_parser.add_argument('-f', '--format', type=str, default='mp3', help='format of output files')
     arg_parser.add_argument('-b', '--bitrate', type=str, default='320K', help='bitrate of output files')
 
     parsed = arg_parser.parse_args()
