@@ -6,10 +6,8 @@ import argparse
 
 import mutagen
 from pydub import AudioSegment
-from mutagen import File, FileType
-from mutagen.flac import FLAC
-from mutagen.mp3 import MP3
-from mutagen.id3 import ID3, APIC
+from mutagen import mp3
+from mutagen import id3
 
 
 def happy_time(start, stop):
@@ -47,7 +45,7 @@ def conversion(path_src, path_dst, count_1):
             if not os.path.exists(dst_full_dir):
                 os.makedirs(dst_full_dir)
             ### Check src file type
-            read_file = File(src_fullpath)
+            read_file = mutagen.File(src_fullpath)
             file_type = type(read_file)
             
             ### File type manifold
@@ -62,11 +60,11 @@ def conversion(path_src, path_dst, count_1):
                 # Art
                 try:
                     art = read_file.pictures[0].data
-                    audio = MP3(dst_fullpath, ID3=ID3)    
-                    audio.tags.add(APIC(encoding=0, # 3 is for utf-8
-                                        mime='image/png', # image/jpeg or image/png
-                                        type=3, # 3 is for the cover image
-                                        data=art))
+                    audio = mp3.MP3(dst_fullpath, ID3=id3.ID3)    
+                    audio.tags.add(id3.APIC(encoding=0, # 3 is for utf-8
+                                            mime='image/png', # image/jpeg or image/png
+                                            type=3, # 3 is for the cover image
+                                            data=art))
                     audio.save()
                 except:
                     pass
@@ -78,14 +76,14 @@ def conversion(path_src, path_dst, count_1):
                 # Write tags/art
                 try:
                     for t in read_file.tags.keys():
-                        audio = MP3(dst_fullpath, ID3=ID3)
+                        audio = mp3.MP3(dst_fullpath, ID3=id3.ID3)
                         audio.tags.add(read_file.tags[t])
                         audio.save()
                 except:
                     pass
                 conversion_count +=1
             #elif (file_type == mutagen.mp3.MP3) or (file_type == mutagen.mp4.MP4) or (file_type == mutagen.asf.ASF):
-            elif file_type == mutagen.mp3.MP3:
+            elif file_type == mp3.MP3:
                 # Copy file
                 shutil.copy(src_fullpath, dst_fullpath)
                 copy_count += 1
