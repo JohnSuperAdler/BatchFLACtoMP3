@@ -16,23 +16,6 @@ from mutagen.id3 import ID3, APIC
 
 
 ##### Parameter: argparse
-
-arg_parser = argparse.ArgumentParser() 
-arg_parser.add_argument('src', type=str, help='path of source')
-arg_parser.add_argument('dst', type=str, help='path of destination')
-arg_parser.add_argument('-f', '--format' , type=str, default='mp3' , help='format of output files')
-arg_parser.add_argument('-b', '--bitrate', type=str, default='320K', help='bitrate of output files')
-path_src    = arg_parser.parse_args().src
-path_dst    = arg_parser.parse_args().dst
-file_format = arg_parser.parse_args().format
-bitrate     = arg_parser.parse_args().bitrate
-
-print(f'Source      file/directory: {path_src}')
-print(f'Destination file/directory: {path_dst}')
-print(f'Output file format : {file_format}')
-print(f'Output file bitrate: {bitrate}')
-
-
 ##### Function
 
 def happy_time(start, stop):
@@ -43,23 +26,8 @@ def happy_time(start, stop):
     duration = "Process time == {}s == {}H {}m {}s".format(process_time,hh,mm,ss)
     return duration
 
-##### Time Start
-time_start_tag_2 = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-print(f'Time start tag: {time_start_tag_2}')
-
-
-##### Main Factory: Conversion Loop
-
-loop_start = time.time()
-
-### Count parameter
-count_1 = 0
-count_2 = 0
-conversion_count = 0
-copy_count = 0
-
 ### Count all
-def count_files():
+def count_files(path_src):
     count = 0
     for a, b, c in os.walk(path_src):
         for src_fn in c:
@@ -68,12 +36,11 @@ def count_files():
     print('Start conversion...')
     return count
 
-count_1 = count_files()
-
 ### Conversion
-def conversion():
+def conversion(path_src, path_dst, count_1):
     conversion_count = 0
     count_2 = 0
+    copy_count = 0
     for a, b, c in os.walk(path_src):
         for src_fn in c:
             count_2 += 1
@@ -134,21 +101,11 @@ def conversion():
             if (count_2 % 100) == 0:
                 print(f'{count_2}/{count_1} files process done. {happy_time(loop_start, time.time())}')
 
-    return conversion_count
-
-conversion_count = conversion()
-
-##### END UP
-
-print(f'All {count_1} files process done. FINISHED')
-dt_end = datetime.datetime.now()
-time_end_tag_2 = dt_end.strftime('%Y/%m/%d %H:%M:%S')
-print(f'Time end tag: {time_end_tag_2}')
-
+    return conversion_count, copy_count
 
 ##### LOG
 
-def write_log():
+def write_log(path_src, path_dst, time_start_tag_2, time_end_tag_2, count_1, conversion_count, copy_count, dt_end):
     log  = ''
     log +=  '[PATH]\n'
     log += f'Source      : {path_src}\n'
@@ -171,4 +128,33 @@ def write_log():
 
     print('Log generated.')
 
-write_log()
+
+if __name__ == '__main__':
+    arg_parser = argparse.ArgumentParser() 
+    arg_parser.add_argument('src', type=str, help='path of source')
+    arg_parser.add_argument('dst', type=str, help='path of destination')
+    arg_parser.add_argument('-f', '--format' , type=str, default='mp3' , help='format of output files')
+    arg_parser.add_argument('-b', '--bitrate', type=str, default='320K', help='bitrate of output files')
+    path_src    = arg_parser.parse_args().src
+    path_dst    = arg_parser.parse_args().dst
+    file_format = arg_parser.parse_args().format
+    bitrate     = arg_parser.parse_args().bitrate
+
+    print(f'Source      file/directory: {path_src}')
+    print(f'Destination file/directory: {path_dst}')
+    print(f'Output file format : {file_format}')
+    print(f'Output file bitrate: {bitrate}')
+
+    time_start_tag_2 = datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+    print(f'Time start tag: {time_start_tag_2}')
+
+    loop_start = time.time()
+    count_1 = count_files(path_src)
+    conversion_count, copy_count = conversion(path_src, path_dst, count_1)
+
+    print(f'All {count_1} files process done. FINISHED')
+    dt_end = datetime.datetime.now()
+    time_end_tag_2 = dt_end.strftime('%Y/%m/%d %H:%M:%S')
+    print(f'Time end tag: {time_end_tag_2}')
+
+    write_log(path_src, path_dst, time_start_tag_2, time_end_tag_2, count_1, conversion_count, copy_count, dt_end)
