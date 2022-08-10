@@ -129,16 +129,19 @@ def write_log(path_src, path_dst, time_start_tag_2, time_end_tag_2, count_1, con
     print('Log generated.')
 
 
-if __name__ == '__main__':
+def parse_args():
     arg_parser = argparse.ArgumentParser() 
     arg_parser.add_argument('src', type=str, help='path of source')
     arg_parser.add_argument('dst', type=str, help='path of destination')
     arg_parser.add_argument('-f', '--format' , type=str, default='mp3' , help='format of output files')
     arg_parser.add_argument('-b', '--bitrate', type=str, default='320K', help='bitrate of output files')
-    path_src    = arg_parser.parse_args().src
-    path_dst    = arg_parser.parse_args().dst
-    file_format = arg_parser.parse_args().format
-    bitrate     = arg_parser.parse_args().bitrate
+
+    parsed = arg_parser.parse_args()
+    return parsed.src, parsed.dst, parsed.format, parsed.bitrate
+
+
+if __name__ == '__main__':
+    path_src, path_dst, file_format, bitrate = parse_args()
 
     print(f'Source      file/directory: {path_src}')
     print(f'Destination file/directory: {path_dst}')
