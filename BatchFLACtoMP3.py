@@ -59,11 +59,16 @@ conversion_count = 0
 copy_count = 0
 
 ### Count all
-for a, b, c in os.walk(path_src):
-    for src_fn in c:
-        count_1 +=1
-print(f'Total {count_1} files in source directory.')
-print('Start conversion...')
+def count_files():
+    count = 0
+    for a, b, c in os.walk(path_src):
+        for src_fn in c:
+            count +=1
+    print(f'Total {count} files in source directory.')
+    print('Start conversion...')
+    return count
+
+count_1 = count_files()
 
 ### Conversion
 for a, b, c in os.walk(path_src):
